@@ -1,5 +1,4 @@
 const { Schema, ObjectId, default: mongoose } = require('mongoose');
-mongoose.connect("mongodb+srv://admin:ashish1234@cluster0.qlonwfg.mongodb.net/coursea");
 
 const userSchema = new Schema({
     email: { type: String, required: true, unique: true},
