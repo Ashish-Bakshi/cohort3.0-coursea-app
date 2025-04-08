@@ -1,10 +1,11 @@
 const { Router } = require('express');
-const { userModel } = require("../db");
+const { userModel, courseModel, purchaseModel } = require("../db");
 const bcrypt = require('bcrypt');
 const userRouter = Router();
 const { z } = require('zod');
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET_USER } = require('../config');
+const { userMiddleware } = require('../middlewares/user.middleware');
 
 userRouter.post("/signup", async (req,res) => {
     const requiredBody = z.object({
@@ -77,9 +78,16 @@ userRouter.post("/signin", async (req,res) => {
     })
 })
 
-userRouter.get("/purchases", (req,res) => {
+userRouter.get("/purchases", userMiddleware, async (req,res) => {
+
+    const userId = req.userId;
+    const purchases = await purchaseModel.find({
+        _id: userId
+    })
+
     res.json({
-        message: "users courses"
+        message: "users courses",
+        courses: purchases
     })
 })
 
